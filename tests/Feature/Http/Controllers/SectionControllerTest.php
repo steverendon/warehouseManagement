@@ -48,19 +48,19 @@ class SectionControllerTest extends TestCase
     }
 
     /** @test */
-    function it_can_show_a_section()
+    function it_can_show_only_one_section()
     {
-        $this->withoutExceptionHandling();
         Section::factory()->create(['name' => 'Comestibles']);
         $section = Section::factory()->create(['name' => 'Deportes']);
 
         $response = $this->get("/api/sections/$section->id");
 
         $response
-            ->assertJson([
+            ->assertJsonCount(1)
+            ->assertJson([0 => [
                 'id' => 2,
                 'name' => 'Deportes',
-            ]);
+            ]]);
     }
 
     /** @test */

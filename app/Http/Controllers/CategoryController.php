@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Section;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
-class SectionController extends Controller
+class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,7 @@ class SectionController extends Controller
      */
     public function index()
     {
-        return Section::all();
-
+        return Category::all();
     }
 
     /**
@@ -26,7 +25,7 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        Section::create($request->all());
+        Category::create($request->all());
 
         return ['message' => 'Created'];
     }
@@ -37,9 +36,9 @@ class SectionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Section $section)
+    public function show(Category $category)
     {
-        return [$section];
+        return [$category];
     }
 
     /**
@@ -49,11 +48,11 @@ class SectionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Section $section)
+    public function update(Request $request, Category $category)
     {
-        $section->update($request->all());
+        $category->update($request->all());
 
-        return ['message' => 'updated'];
+        return ['message' => 'Updated'];
     }
 
     /**
@@ -62,12 +61,10 @@ class SectionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Section $section)
+    public function destroy(Category $category)
     {
-        $section->delete();
+        $category->delete();
 
-        return [
-            'message' => 'Deleted',
-        ];
+        return ['message' => 'Deleted'];
     }
 }

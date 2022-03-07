@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Section;
+use App\Models\Movement;
 use Illuminate\Http\Request;
 
-class SectionController extends Controller
+class MovementController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,7 @@ class SectionController extends Controller
      */
     public function index()
     {
-        return Section::all();
-
+        return Movement::all();
     }
 
     /**
@@ -26,9 +25,7 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        Section::create($request->all());
-
-        return ['message' => 'Created'];
+        return Movement::create($request->all());
     }
 
     /**
@@ -37,9 +34,9 @@ class SectionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Section $section)
+    public function show(Movement $movement)
     {
-        return [$section];
+        return [$movement];
     }
 
     /**
@@ -49,11 +46,9 @@ class SectionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Section $section)
+    public function update(Request $request, $id)
     {
-        $section->update($request->all());
-
-        return ['message' => 'updated'];
+        //
     }
 
     /**
@@ -62,12 +57,8 @@ class SectionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Section $section)
+    public function destroy($id)
     {
-        $section->delete();
-
-        return [
-            'message' => 'Deleted',
-        ];
+        //
     }
 }

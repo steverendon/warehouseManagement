@@ -1,8 +1,12 @@
 <?php
 
+use App\Models\Movement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SectionController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\MovementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +24,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::resource('sections', SectionController::class)->names('sections');
+
+//Route::get('categories/{category}', [CategoryController::class, 'show']);
+
+Route::resource('categories', CategoryController::class)->names('categories');
+
+Route::resource('products', ProductController::class)->names('products');
+
+Route::resource('movements', MovementController::class)->names('movements');
