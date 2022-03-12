@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Section;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
 class SectionController extends Controller
 {
+    use ApiResponser;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +17,7 @@ class SectionController extends Controller
      */
     public function index()
     {
-        return Section::all();
-
+        return $this->successResponse(Section::all());
     }
 
     /**
@@ -26,9 +28,9 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        Section::create($request->all());
+        $section = Section::create($request->all());
 
-        return ['message' => 'Created'];
+        return $this->successResponse($section);
     }
 
     /**
@@ -39,7 +41,7 @@ class SectionController extends Controller
      */
     public function show(Section $section)
     {
-        return [$section];
+        return $this->successResponse($section);
     }
 
     /**
@@ -51,9 +53,9 @@ class SectionController extends Controller
      */
     public function update(Request $request, Section $section)
     {
-        $section->update($request->all());
+        $section = $section->update($request->all());
 
-        return ['message' => 'updated'];
+        return $this->successResponse($section);
     }
 
     /**
@@ -66,8 +68,6 @@ class SectionController extends Controller
     {
         $section->delete();
 
-        return [
-            'message' => 'Deleted',
-        ];
+        return $this->successResponse(null, 204);
     }
 }

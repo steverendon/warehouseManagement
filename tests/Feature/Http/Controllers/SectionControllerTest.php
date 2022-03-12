@@ -20,7 +20,7 @@ class SectionControllerTest extends TestCase
         ])
         ->assertStatus(200)
         ->assertJson([
-            'message' => 'Created',
+            'data' => ['id' => 1, 'name' => 'Comestibles']
         ]);
 
         $this->assertDatabaseHas('sections', [
@@ -32,19 +32,25 @@ class SectionControllerTest extends TestCase
     function it_can_lists_all_registers()
     {
         Section::factory()->create(['name' => 'Comestibles']);
-        Section::factory(2)->create();
+        Section::factory()->create(['name' => 'Deportes']);
+        Section::factory()->create(['name' => 'Belleza']);
 
         $response = $this->get('/api/sections');
 
         $response
-            ->assertJson(fn (AssertableJson $json) => 
-                $json->has(3)
-                    ->first(fn ($json) => 
-                        $json->where('id', 1)
-                             ->where('name', 'Comestibles')
-                             ->etc()
-                )
-            );
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [
+                    ['id', 'name']
+                ]
+            ])
+            ->assertJson([
+                'data' => [
+                    ['id' => 1, 'name' => 'Comestibles'],
+                    ['id' => 2, 'name' => 'Deportes'],
+                    ['id' => 3, 'name' => 'Belleza']
+                ]
+            ]);
     }
 
     /** @test */
@@ -52,30 +58,34 @@ class SectionControllerTest extends TestCase
     {
         Section::factory()->create(['name' => 'Comestibles']);
         $section = Section::factory()->create(['name' => 'Deportes']);
+        Section::factory()->create(['name' => 'Belleza']);
 
-        $response = $this->get("/api/sections/$section->id");
+        $response = $this->get("/api/sections/{$section->id}");
 
         $response
-            ->assertJsonCount(1)
-            ->assertJson([0 => [
-                'id' => 2,
-                'name' => 'Deportes',
-            ]]);
+            ->assertJsonStructure([
+                'data' => ['id', 'name']
+            ])
+            ->assertJson([
+                'data' => ['id' => 2, 'name' => 'Deportes']
+            ]);
     }
 
     /** @test */
     function it_can_update_a_section()
     {
+        $this->withoutExceptionHandling();
+
         $section = Section::factory()->create(['name' => 'Comestibles']);
 
-        $response = $this->put("api/sections/$section->id", [
-            'name' => 'Deportes',
+        $response = $this->json('PUT', "api/sections/{$section->id}", [
+            'name' => 'Deportes'
         ]);
 
         $response
             ->assertStatus(200)
             ->assertJson([
-                'message' => 'updated',
+                'data' => ['id' => $section->id, 'name' => 'Deportes'],
             ]);
 
         $this->assertDatabaseHas('sections', [
@@ -88,12 +98,10 @@ class SectionControllerTest extends TestCase
     {
         $section = Section::factory()->create(['name' => 'Comestibles']);
 
-        $response = $this->delete("/api/sections/$section->id");
+        $response = $this->json('DELETE', "/api/sections/$section->id", []);
 
         $response
-            ->assertJson([
-                'message' => 'Deleted',
-            ]);
+            ->assertStatus(204);
 
         $this->assertDatabaseMissing('sections', [
             'name' => 'Comestibles',
