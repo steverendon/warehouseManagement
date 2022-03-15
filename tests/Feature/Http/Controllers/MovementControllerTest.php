@@ -35,14 +35,17 @@ class MovementControllerTest extends TestCase
         ]);
 
         $this->json('GET', 'api/movements')
-            ->assertJsonCount(2)
             ->assertStatus(200)
             ->assertJson([
-                ['product_id' => $product->id, 'amount' => 5, 'type' => self::ADDICTION, 'description' => 'Primer movimiento'],
-                ['product_id' => $product->id, 'amount' => 3, 'type' => self::SUSCTRACT, 'description' => 'Segundo movimiento'],
+                'data' => [
+                    ['product_id' => $product->id, 'amount' => 5, 'type' => self::ADDICTION, 'description' => 'Primer movimiento'],
+                    ['product_id' => $product->id, 'amount' => 3, 'type' => self::SUSCTRACT, 'description' => 'Segundo movimiento'],
+                ]
             ])
-            ->assertJsonStructure(['*' => 
-                ['id', 'product_id', 'amount', 'type', 'description']
+            ->assertJsonStructure([
+                'data' => [
+                    ['id', 'product_id', 'amount', 'type', 'description']
+                ]
             ]);
     }
 
@@ -62,14 +65,14 @@ class MovementControllerTest extends TestCase
 
         $this->json('GET', "/api/movements/$movement->id")
             ->assertJsonCount(1)
-            ->assertJson([0 => [
+            ->assertJson(['data' => [
                 'id' => 1,
                 'product_id' => '1',
                 'amount' => '5',
                 'type' => self::ADDICTION,
                 'description' => 'lorem',
-            ]])->assertJsonStructure(['*' => 
-                ['id', 'product_id', 'amount', 'type', 'description']
+            ]])->assertJsonStructure([
+                'data' => ['id', 'product_id', 'amount', 'type', 'description']
             ]);
     }
 
@@ -86,6 +89,15 @@ class MovementControllerTest extends TestCase
         $this->json('POST', '/api/movements', $payload)
             ->assertStatus(201)
             ->assertJson([
+                'data' => [
+                    'id' => 1,
+                    'amount' => 5,
+                    'type' => self::ADDICTION,
+                    'description' => 'Ingreso de producto',
+                ]
+            ]);
+
+            $this->assertDatabaseHas('movements', [
                 'id' => 1,
                 'amount' => 5,
                 'type' => self::ADDICTION,

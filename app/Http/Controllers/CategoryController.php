@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    use ApiResponser;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +17,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Category::all();
+        $category = Category::all();
+
+        return $this->successResponse($category);
     }
 
     /**
@@ -25,9 +30,9 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        Category::create($request->all());
+        $category = Category::create($request->all());
 
-        return ['message' => 'Created'];
+        return $this->successResponse($category);
     }
 
     /**
@@ -38,7 +43,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return [$category];
+        return $this->successResponse($category);
     }
 
     /**
@@ -50,9 +55,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $category->update($request->all());
+        $categoryUpdated = $category->update($request->all());
 
-        return ['message' => 'Updated'];
+        return $this->successResponse($categoryUpdated);
     }
 
     /**
@@ -65,6 +70,6 @@ class CategoryController extends Controller
     {
         $category->delete();
 
-        return ['message' => 'Deleted'];
+        return $this->successResponse([], 204);
     }
 }

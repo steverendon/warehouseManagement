@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Movement;
+use App\Traits\ApiResponser;
 use Illuminate\Http\Request;
 
 class MovementController extends Controller
 {
+    use ApiResponser;
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +17,9 @@ class MovementController extends Controller
      */
     public function index()
     {
-        return Movement::all();
+        $movements = Movement::all();
+
+        return $this->successResponse($movements);
     }
 
     /**
@@ -25,7 +30,9 @@ class MovementController extends Controller
      */
     public function store(Request $request)
     {
-        return Movement::create($request->all());
+        $movement = Movement::create($request->all());
+
+        return $this->successResponse($movement, 201);
     }
 
     /**
@@ -36,7 +43,7 @@ class MovementController extends Controller
      */
     public function show(Movement $movement)
     {
-        return [$movement];
+        return $this->successResponse($movement);
     }
 
     /**

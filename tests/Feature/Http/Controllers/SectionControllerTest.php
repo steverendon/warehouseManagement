@@ -15,7 +15,7 @@ class SectionControllerTest extends TestCase
     /** @test */
     function it_can_store_a_section()
     {
-        $this->post('/api/sections', [
+        $this->json('POST', '/api/sections', [
             'name' => 'Comestibles',
         ])
         ->assertStatus(200)
@@ -25,6 +25,19 @@ class SectionControllerTest extends TestCase
 
         $this->assertDatabaseHas('sections', [
             'name' => 'Comestibles',
+        ]);
+    }
+
+    /** @test */
+    function should_return_an_error_message_when_the_name_field_is_missing()
+    {
+        $this->json('POST', '/api/sections', [])
+            ->assertStatus(422)
+            ->assertJson([
+                'errors' => [
+                    'name' => ['The name field is required.'],
+                ],
+                'code' => 422   
         ]);
     }
 
@@ -74,8 +87,6 @@ class SectionControllerTest extends TestCase
     /** @test */
     function it_can_update_a_section()
     {
-        $this->withoutExceptionHandling();
-
         $section = Section::factory()->create(['name' => 'Comestibles']);
 
         $response = $this->json('PUT', "api/sections/{$section->id}", [
@@ -91,7 +102,27 @@ class SectionControllerTest extends TestCase
         $this->assertDatabaseHas('sections', [
             'name' => 'Deportes',
         ]);
+
+        $this->assertDatabaseMissing('sections', [
+            'name' => 'Comestibles',
+        ]);
     }
+
+        /** @test */
+        function it_should_return_a_error_message_when_update_without_name()
+        {
+            $section = Section::factory()->create(['name' => 'Comestibles']);
+    
+            $response = $this->json('PUT', "api/sections/{$section->id}", []);
+    
+            $response
+                ->assertStatus(422)
+                ->assertJson([
+                    'errors' => [
+                        'name' => ['The name field is required.']
+                    ],
+                ]);
+        }
 
     /** @test */
     function it_can_delete_a_section()

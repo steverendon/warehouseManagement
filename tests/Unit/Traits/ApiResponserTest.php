@@ -36,7 +36,7 @@ class ApiResponserTest extends TestCase
     /** @test */
     function can_return_a_error_response_json()
     {
-        $error = ['error' => 'This is a error', 'code' => Response::HTTP_NOT_FOUND];
+        $error = ['errors' => 'This is a error', 'code' => Response::HTTP_NOT_FOUND];
         $error = json_encode($error);
 
         $this->assertEquals(
